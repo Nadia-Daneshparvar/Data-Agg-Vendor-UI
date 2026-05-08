@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beghou · ARC — Oak Ave Pharma Data Portal</title>
+<style>
+  :root {
+    --navy: #020434;
+    --navy-mid: #21234B;
+    --navy-light: #2C2F64;
+    --purple-dark: #662C6E;
+    --purple-mid: #75357B;
+    --teal: #8AD3C7;
+    --teal-dark: #3AACA9;
+    --lavender: #EDF0FA;
+    --pink: #E60F65;
+    --white: #FFFFFF;
+    --gray-light: #E8E8EC;
+    --gray-mid: #C5C5CF;
+    --gray-bg: #F6F6F7;
+    --chart-1: #662C6E;
+    --chart-2: #75357B;
+    --chart-3: #8AD3C7;
+    --chart-4: #3AACA9;
+    --chart-5: #008DE7;
+    --chart-6: #020434;
+    --font: 'Segoe UI', Arial, sans-serif;
+    --radius: 8px;
+    --shadow: 0 1px 4px rgba(2,4,52,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--lavender); color: var(--navy); font-size: 13px; min-height: 100vh; }
+
+  /* TOP NAV */
+  .topnav {
+    background: var(--navy);
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--purple-dark);
+  }
+  .topnav-logo { display: flex; align-items: center; gap: 8px; }
+  .logo-mark {
+    width: 28px; height: 28px;
+    background: var(--pink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: white;
+  }
+  .logo-text { color: white; font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .logo-divider { color: var(--teal); margin: 0 4px; }
+  .logo-subtitle { color: var(--gray-mid); font-size: 12px; }
+  .topnav-spacer { flex: 1; }
+  .topnav-user { display: flex; align-items: center; gap: 10px; color: var(--gray-mid); font-size: 12px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--purple-dark); display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; }
+
+  /* LAYOUT */
+  .layout { display: flex; height: calc(100vh - 52px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 200px;
+    background: var(--navy-mid);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+    flex-shrink: 0;
+  }
+  .sidebar-section { padding: 8px 16px 4px; color: var(--gray-mid); font-size: 10px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 16px;
+    color: #B9BBD7;
+    cursor: pointer;
+    font-size: 12.5px;
+    transition: background 0.15s;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(237,240,250,0.08); color: white; }
+  .nav-item.active { background: rgba(237,240,250,0.1); color: white; border-left-color: var(--pink); }
+  .nav-item svg { opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active svg { opacity: 1; }
+  .nav-badge { margin-left: auto; background: var(--pink); color: white; border-radius: 10px; font-size: 10px; padding: 1px 6px; font-weight: 600; }
+  .sidebar-spacer { flex: 1; }
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid rgba(185,187,215,0.15); }
+  .sidebar-footer-label { color: var(--gray-mid); font-size: 10px; }
+  .sidebar-footer-val { color: #B9BBD7; font-size: 11px; margin-top: 2px; }
+
+  /* MAIN CONTENT */
+  .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+  .page { display: none; flex-direction: column; height: 100%; }
+  .page.active { display: flex; }
+
+  /* PAGE HEADER */
+  .page-header {
+    background: white;
+    padding: 14px 24px 0;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .page-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .page-title { font-size: 16px; font-weight: 600; color: var(--navy); }
+  .page-subtitle { font-size: 11px; color: var(--gray-mid); margin-top: 2px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: var(--font);
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--purple-dark); color: white; }
+  .btn-primary:hover { background: var(--navy); }
+  .btn-secondary { background: white; color: var(--purple-dark); border-color: var(--purple-dark); }
+  .btn-secondary:hover { background: var(--lavender); }
+  .btn-ghost { background: transparent; color: var(--gray-mid); border-color: var(--gray-light); }
+  .btn-ghost:hover { background: var(--gray-bg); }
+  .btn-danger { background: #C0392B; color: white; }
+  .btn-danger:hover { background: #A93226; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; }
+  .tab {
+    padding: 8px 16px;
+    font-size: 12.5px;
+    color: var(--gray-mid);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--navy); }
+  .tab.active { color: var(--purple-dark); border-bottom-color: var(--purple-dark); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    background: white;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-label { font-size: 11px; color: var(--gray-mid); font-weight: 500; }
+  .filter-select {
+    padding: 5px 28px 5px 10px;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--navy);
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23C5C5CF'/%3E%3C/svg%3E") no-repeat right 8px center;
+    appearance: none;
+    cursor: pointer;
+    font-family: var(--font);
+  }
+  .filter-select:focus { outline: 1px solid var(--purple-dark); }
+  .filter-divider { width: 1px; height: 20px; background: var(--gray-light); }
+  .filter-date { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-mid); }
+  .filter-date input {
+    padding: 5px 8px;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-family: var(--font);
+    color: var(--navy);
+  }
+  .filter-date input:focus { outline: 1px solid var(--purple-dark); }
+  .filter-spacer { flex: 1; }
+  .results-count { font-size: 11px; color: var(--gray-mid); }
+  .results-count strong { color: var(--navy); }
+
+  /* CONTENT AREA */
+  .content-area { flex: 1; padding: 16px 24px; overflow-y: auto; }
+
+  /* SUMMARY CARDS */
+  .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  .summary-card.navy { border-left-color: var(--navy); }
+  .summary-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    border: 1px solid var(--gray-light);
+    border-left: 3px solid var(--purple-dark);
+    box-shadow: var(--shadow);
+  }
+  .summary-card.teal { border-left-color: var(--teal-dark); }
+  .summary-card.pink { border-left-color: var(--pink); }
+  .summary-card.green { border-left-color: #27AE60; }
+  .summary-label { font-size: 10px; color: var(--gray-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .summary-value { font-size: 22px; font-weight: 600; color: var(--navy); line-height: 1; }
+  .summary-sub { font-size: 10px; color: var(--gray-mid); margin-top: 4px; }
+  .summary-sub span { color: var(--pink); font-weight: 600; }
+  .summary-sub span.ok { color: #27AE60; }
+
+  /* TABLE */
+  .table-wrapper {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-light);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead tr { background: var(--navy); }
+  thead th {
+    padding: 10px 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 11px;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { background: var(--navy-mid); }
+  thead th .sort-icon { margin-left: 4px; opacity: 0.5; font-size: 9px; }
+  thead th.sorted .sort-icon { opacity: 1; color: var(--teal); }
+  tbody tr { border-bottom: 1px solid var(--gray-light); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: var(--lavender); }
+  tbody tr:hover { background: #E2E8F8 !important; cursor: pointer; }
+  tbody td { padding: 9px 12px; vertical-align: middle; }
+  .td-vendor { font-weight: 600; color: var(--navy); }
+  .td-file { color: var(--navy-light); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .td-txn { font-family: monospace; font-size: 11px; color: var(--navy-light); }
+  .td-field { font-family: monospace; font-size: 11px; background: var(--lavender); padding: 2px 6px; border-radius: 4px; color: var(--purple-dark); font-weight: 600; }
+  .td-error { color: #7B1D1D; font-size: 11px; }
+  .days-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .days-ok { background: #D5F5E3; color: #1D6A3A; }
+  .days-warn { background: #FEF3CD; color: #7D5A0E; }
+  .days-danger { background: #FDECEA; color: #7B1D1D; }
+
+  /* STATUS BADGE */
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .status-open { background: #FDECEA; color: #7B1D1D; }
+  .status-progress { background: #FEF3CD; color: #7D5A0E; }
+  .status-resolved { background: #D5F5E3; color: #1D6A3A; }
+  .status-override { background: #EDE7F6; color: #4527A0; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* PHI BADGE */
+  .phi-flag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #FDECEA;
+    color: #7B1D1D;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: monospace;
+  }
+
+  /* ACTION BUTTON */
+  .action-btn {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-light);
+    background: white;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--gray-mid);
+    transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--lavender); color: var(--purple-dark); border-color: var(--purple-dark); }
+
+  /* MODAL OVERLAY */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(2,4,52,0.55);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    width: 620px;
+    max-width: 95vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(2,4,52,0.25);
+  }
+  .modal-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    position: sticky; top: 0; background: white; z-index: 1;
+  }
+  .modal-title { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .modal-subtitle { font-size: 11px; color: var(--gray-mid); margin-top: 2px; }
+  .modal-close { background: none; border: none; cursor: pointer; color: var(--gray-mid); font-size: 18px; padding: 2px 6px; border-radius: 4px; }
+  .modal-close:hover { background: var(--gray-bg); color: var(--navy); }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--gray-light); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* FORM */
+  .form-row { margin-bottom: 14px; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-label { font-size: 11px; font-weight: 600; color: var(--navy-mid); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-value { font-size: 12.5px; color: var(--navy); padding: 7px 10px; background: var(--gray-bg); border-radius: 6px; border: 1px solid var(--gray-light); }
+  .form-input {
+    width: 100%; padding: 7px 10px;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-family: var(--font);
+    color: var(--navy);
+    transition: border 0.15s;
+  }
+  .form-input:focus { outline: none; border-color: var(--purple-dark); }
+  textarea.form-input { min-height: 80px; resize: vertical; }
+  .form-section-title { font-size: 11px; font-weight: 700; color: var(--purple-dark); text-transform: uppercase; letter-spacing: 0.6px; margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--gray-light); }
+  .phi-warning {
+    background: #FDECEA; border: 1px solid #FAAAA0;
+    border-radius: 6px; padding: 10px 12px; margin-bottom: 14px;
+    font-size: 11px; color: #7B1D1D; display: flex; gap: 8px; align-items: flex-start;
+  }
+  .override-section {
+    background: var(--lavender);
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 14px;
+  }
+  .override-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--navy); }
+  input[type=checkbox] { accent-color: var(--purple-dark); width: 14px; height: 14px; cursor: pointer; }
+  .override-details { margin-top: 12px; display: none; }
+  .override-details.visible { display: block; }
+
+  /* DEV NOTES */
+  .dev-notes-btn {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 40px; height: 40px;
+    background: var(--navy-mid);
+    color: white; border: none;
+    border-radius: 50%; cursor: pointer;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 2px 8px rgba(2,4,52,0.3);
+    z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .dev-notes-btn:hover { background: var(--purple-dark); }
+  .dev-notes-panel {
+    display: none;
+    position: fixed;
+    bottom: 70px; right: 20px;
+    width: 340px;
+    background: var(--navy);
+    color: white;
+    border-radius: 10px;
+    padding: 16px;
+    z-index: 150;
+    box-shadow: 0 4px 20px rgba(2,4,52,0.4);
+    font-size: 11.5px;
+    line-height: 1.6;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .dev-notes-panel.open { display: block; }
+  .dev-notes-panel h4 { color: var(--teal); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .dev-notes-panel ul { padding-left: 14px; color: #B9BBD7; }
+  .dev-notes-panel ul li { margin-bottom: 4px; }
+  .dev-notes-panel .component-tag { display: inline-block; background: var(--purple-dark); color: white; font-size: 9px; padding: 1px 5px; border-radius: 3px; font-family: monospace; margin-bottom: 4px; }
+  .dev-notes-panel .note-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(185,187,215,0.2); }
+  .dev-notes-panel .note-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+  /* ALERTS PAGE */
+  .alert-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-light);
+    border-left: 3px solid var(--teal-dark);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .alert-card.warn { border-left-color: #E67E22; }
+  .alert-card.info { border-left-color: #008DE7; }
+  .alert-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .alert-title { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .alert-meta { font-size: 11px; color: var(--gray-mid); margin-bottom: 6px; }
+  .alert-desc { font-size: 12px; color: var(--navy-light); }
+  .tbd-badge { background: var(--lavender); color: var(--navy-light); border: 1px dashed var(--gray-mid); border-radius: 4px; font-size: 10px; padding: 2px 7px; font-weight: 600; }
+
+  /* USER MGMT PAGE */
+  .user-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: white; border-radius: var(--radius); border: 1px solid var(--gray-light); margin-bottom: 8px; box-shadow: var(--shadow); }
+  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--purple-dark); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .user-email { font-size: 11px; color: var(--gray-mid); }
+  .user-role-badge { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .role-manager { background: #EDE7F6; color: #4527A0; }
+  .role-standard { background: var(--lavender); color: var(--navy-light); }
+  .user-spacer { flex: 1; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--gray-mid); }
+  .empty-state svg { margin-bottom: 12px; opacity: 0.4; }
+  .empty-title { font-size: 14px; font-weight: 600; color: var(--navy-light); margin-bottom: 6px; }
+  .empty-sub { font-size: 12px; }
+
+  /* ORIGINAL / CORRECTED VALUE */
+  .val-original {
+    font-family: monospace; font-size: 11px;
+    background: #FDECEA; color: #7B1D1D;
+    padding: 2px 7px; border-radius: 4px;
+    display: inline-block;
+  }
+  .val-corrected {
+    font-family: monospace; font-size: 11px;
+    background: #D5F5E3; color: #1D6A3A;
+    padding: 2px 7px; border-radius: 4px;
+    display: inline-block;
+  }
+  .val-blank {
+    font-family: monospace; font-size: 11px;
+    background: #FDECEA; color: #7B1D1D;
+    padding: 2px 7px; border-radius: 4px;
+    display: inline-block; font-style: italic;
+  }
+  .val-arrow { color: var(--gray-mid); font-size: 11px; margin: 0 4px; }
+  .val-cell { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+
+  /* VALUE COMPARISON BOX in modal */
+  .value-compare-box {
+    background: var(--gray-bg);
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .value-compare-box .vc-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--gray-mid); margin-bottom: 6px;
+  }
+  .value-compare-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .vc-original {
+    font-family: monospace; font-size: 13px;
+    background: #FDECEA; color: #7B1D1D;
+    padding: 5px 12px; border-radius: 6px;
+    border: 1px solid #FAAAA0;
+  }
+  .vc-corrected {
+    font-family: monospace; font-size: 13px;
+    background: #D5F5E3; color: #1D6A3A;
+    padding: 5px 12px; border-radius: 6px;
+    border: 1px solid #A9DFBF;
+  }
+  .vc-arrow { font-size: 16px; color: var(--gray-mid); }
+  .vc-blank { font-family: monospace; font-size: 13px; background: #FDECEA; color: #7B1D1D; padding: 5px 12px; border-radius: 6px; border: 1px solid #FAAAA0; font-style: italic; }
+  .vc-updated-by { font-size: 11px; color: var(--gray-mid); margin-top: 6px; }
+  .vc-updated-by strong { color: var(--navy-light); }
+
+  /* PAGINATION */
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--gray-light); background: white; font-size: 11px; color: var(--gray-mid); }
+  .page-btns { display: flex; gap: 4px; }
+  .page-btn { padding: 4px 9px; border-radius: 5px; border: 1px solid var(--gray-light); background: white; color: var(--navy); cursor: pointer; font-size: 11px; font-family: var(--font); }
+  .page-btn:hover { background: var(--lavender); border-color: var(--purple-dark); }
+  .page-btn.current { background: var(--purple-dark); color: white; border-color: var(--purple-dark); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: white; padding: 10px 20px; border-radius: 8px;
+    font-size: 12.5px; z-index: 300;
+    box-shadow: 0 4px 16px rgba(2,4,52,0.3);
+    transition: transform 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-left: 3px solid var(--teal-dark); }
+  .toast.error { border-left: 3px solid var(--pink); }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-logo">
+    <div class="logo-mark">b</div>
+    <span class="logo-text">beghou <span class="logo-divider">·</span> ARC</span>
+    <span class="logo-subtitle">Oak Ave Pharma Data Portal</span>
+  </div>
+  <div class="topnav-spacer"></div>
+  <div class="topnav-user">
+    <span>Accredo Operations</span>
+    <div class="avatar">AO</div>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Portal</div>
+    <a class="nav-item active" onclick="showPage('exceptions')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Data Exceptions
+      <span class="nav-badge">9</span>
+    </a>
+    <a class="nav-item" onclick="showPage('alerts')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Operational Alerts
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" onclick="showPage('users')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      User Management
+    </a>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-label">Logged in as</div>
+      <div class="sidebar-footer-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7305161d171c01331210100116171c5d101c1e">[email&#160;protected]</a></div>
+      <div class="sidebar-footer-label" style="margin-top:8px">Role</div>
+      <div class="sidebar-footer-val">Manager</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ===== DATA EXCEPTIONS PAGE ===== -->
+    <div class="page active" id="page-exceptions">
+      <div class="page-header">
+        <div class="page-header-top">
+          <div>
+            <div class="page-title">Data Exceptions</div>
+            <div class="page-subtitle">Review and resolve flagged records for your organization</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-ghost" onclick="showToast('Report emailed to your distribution list', 'success')">
+              ↓ Export Report
+            </button>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this, 'all')">All Exceptions</div>
+          <div class="tab" onclick="switchTab(this, 'open')">Open <span style="color:var(--pink);margin-left:4px;font-weight:700">6</span></div>
+          <div class="tab" onclick="switchTab(this, 'progress')">In Progress <span style="color:#7D5A0E;margin-left:4px;font-weight:700">1</span></div>
+          <div class="tab" onclick="switchTab(this, 'resolved')">Resolved <span style="color:#1D6A3A;margin-left:4px;font-weight:700">2</span></div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <span class="filter-label">Vendor</span>
+        <select class="filter-select" onchange="applyFilters()">
+          <option>All</option>
+          <option>SP 1</option>
+          <option>SP 2</option>
+          <option>Hub 1</option>
+        </select>
+        <span class="filter-label">File Type</span>
+        <select class="filter-select" onchange="applyFilters()">
+          <option>All</option>
+          <option>SP: Status</option>
+          <option>SP: Dispense</option>
+          <option>SP: Inventory</option>
+          <option>Hub: Per Partner</option>
+        </select>
+        <span class="filter-label">Status</span>
+        <select class="filter-select" id="status-filter" onchange="applyFilters()">
+          <option value="">All</option>
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+        <div class="filter-divider"></div>
+        <div class="filter-date">
+          <span>Error Date</span>
+          <input type="date" value="2021-01-01">
+          <span>to</span>
+          <input type="date" value="2026-04-06">
+        </div>
+        <div class="filter-spacer"></div>
+        <span class="results-count"><strong id="results-count">9</strong> records</span>
+      </div>
+
+      <!-- SUMMARY CARDS -->
+      <div class="content-area" style="padding-bottom:0">
+        <div class="summary-row">
+          <div class="summary-card navy">
+            <div class="summary-label">All Errors</div>
+            <div class="summary-value" style="color:var(--navy)" id="card-all">9</div>
+            <div class="summary-sub">Across all statuses</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-label">Total Open</div>
+            <div class="summary-value" style="color:var(--pink)" id="card-open">6</div>
+            <div class="summary-sub"><span>2</span> aging 10+ days</div>
+          </div>
+          <div class="summary-card teal">
+            <div class="summary-label">In Progress</div>
+            <div class="summary-value" style="color:#7D5A0E" id="card-progress">1</div>
+            <div class="summary-sub">Pending vendor correction</div>
+          </div>
+          <div class="summary-card green">
+            <div class="summary-label">Resolved</div>
+            <div class="summary-value" style="color:#1D6A3A" id="card-resolved">2</div>
+            <div class="summary-sub"><span class="ok">+2</span> this week</div>
+          </div>
+          <div class="summary-card pink">
+            <div class="summary-label">Overridden</div>
+            <div class="summary-value" style="color:#4527A0" id="card-overridden">0</div>
+            <div class="summary-sub">Manual closes pending review</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="content-area" style="padding-top:12px">
+        <div class="table-wrapper">
+          <table id="exceptions-table">
+            <thead>
+              <tr>
+                <th onclick="sortTable(0)">Vendor Name <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(1)">File Name <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(2)">Transaction ID <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(3)">Internal Record ID <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(4)">Patient ID <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(5)">Field in Error <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(6)">Error Type / Reason <span class="sort-icon">↕</span></th>
+                <th onclick="sortTable(7)" class="sorted">Error First Received <span class="sort-icon">↓</span></th>
+                <th onclick="sortTable(8)">Days Since <span class="sort-icon">↕</span></th>
+                <th>Original Value</th>
+                <th>Corrected Value</th>
+                <th onclick="sortTable(9)">Status <span class="sort-icon">↕</span></th>
+                <th>Override</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="exceptions-tbody">
+            </tbody>
+          </table>
+          <div class="pagination">
+            <span>Showing 1–9 of 9 records</span>
+            <div class="page-btns">
+              <button class="page-btn">‹</button>
+              <button class="page-btn current">1</button>
+              <button class="page-btn">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== OPERATIONAL ALERTS PAGE ===== -->
+    <div class="page" id="page-alerts">
+      <div class="page-header">
+        <div class="page-header-top">
+          <div>
+            <div class="page-title">Operational Alerts</div>
+            <div class="page-subtitle">Non-validation issues requiring vendor attention</div>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab active">All Alerts</div>
+          <div class="tab">Inventory (1)</div>
+          <div class="tab">Triage (1)</div>
+          <div class="tab">Field Density (1)</div>
+        </div>
+      </div>
+      <div class="content-area">
+        <div style="background:var(--lavender);border:1px dashed var(--gray-mid);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:11.5px;color:var(--navy-light)">
+          ⚠️ Alert types below are <strong>TBD pending stakeholder alignment</strong>. Inclusion and prioritization subject to change.
+        </div>
+        <div class="alert-card warn">
+          <div class="alert-header">
+            <div class="alert-title">Inventory / Dispense Reconciliation Mismatch</div>
+            <span class="tbd-badge">TBD</span>
+          </div>
+          <div class="alert-meta">SP 1 · Week of Mar 24, 2026 · Detected Apr 1, 2026</div>
+          <div class="alert-desc">A discrepancy exists between units reported in SP 1's inventory file vs. dispense file for the period ending Mar 31. Delta: <strong>+14 units</strong>. Vendor to confirm or submit corrected file.</div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="btn btn-secondary" style="font-size:11px;padding:5px 12px">Acknowledge</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px">Submit Corrected File</button>
+          </div>
+        </div>
+        <div class="alert-card">
+          <div class="alert-header">
+            <div class="alert-title">Unlinked Triage Record</div>
+            <span class="tbd-badge">TBD</span>
+          </div>
+          <div class="alert-meta">Hub 1 · Patient ref: ████████ · Received Feb 4, 2026</div>
+          <div class="alert-desc">Hub 1 reported a patient as triaged but no corresponding patient record has been received from the SP. Vendor to confirm receipt or provide status update.</div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="btn btn-secondary" style="font-size:11px;padding:5px 12px">Provide Status</button>
+          </div>
+        </div>
+        <div class="alert-card info">
+          <div class="alert-header">
+            <div class="alert-title">Field Population Density — Threshold Exceeded</div>
+            <span class="tbd-badge">TBD</span>
+          </div>
+          <div class="alert-meta">SP 2 · Field: SP_Ship_From_ZIP_Code · Null rate: 68%</div>
+          <div class="alert-desc">Fields marked "required when available" are being submitted as null at a rate exceeding the acceptable threshold (50% null). Vendor to review submission process and address missing values.</div>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button class="btn btn-secondary" style="font-size:11px;padding:5px 12px">Review & Respond</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== USER MANAGEMENT PAGE ===== -->
+    <div class="page" id="page-users">
+      <div class="page-header">
+        <div class="page-header-top">
+          <div>
+            <div class="page-title">User Management</div>
+            <div class="page-subtitle">Manage portal access for your organization (manager access required)</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-primary" onclick="showToast('Add User form coming soon', 'success')">+ Add User</button>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab active">All Users (4)</div>
+          <div class="tab">Managers (1)</div>
+          <div class="tab">Standard Access (3)</div>
+        </div>
+      </div>
+      <div class="content-area">
+        <div class="user-row">
+          <div class="user-avatar">JD</div>
+          <div>
+            <div class="user-name">Jane Doe</div>
+            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="107a717e753e747f75507173736275747f3e737f7d">[email&#160;protected]</a></div>
+          </div>
+          <span class="user-role-badge role-manager">Manager</span>
+          <div class="user-spacer"></div>
+          <span style="font-size:11px;color:var(--gray-mid)">Last login: Apr 4, 2026</span>
+          <button class="action-btn" title="Edit user">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+        <div class="user-row">
+          <div class="user-avatar" style="background:var(--teal-dark)">MK</div>
+          <div>
+            <div class="user-name">Mike Kim</div>
+            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="79145712101439181a1a0b1c1d16571a1614">[email&#160;protected]</a></div>
+          </div>
+          <span class="user-role-badge role-standard">Standard</span>
+          <div class="user-spacer"></div>
+          <span style="font-size:11px;color:var(--gray-mid)">Last login: Apr 2, 2026</span>
+          <button class="action-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+        <div class="user-row">
+          <div class="user-avatar" style="background:var(--navy-light)">SR</div>
+          <div>
+            <div class="user-name">Sara Reyes</div>
+            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ec9fc29e8995899fac8d8f8f9e898883c28f8381">[email&#160;protected]</a></div>
+          </div>
+          <span class="user-role-badge role-standard">Standard</span>
+          <div class="user-spacer"></div>
+          <span style="font-size:11px;color:var(--gray-mid)">Last login: Mar 29, 2026</span>
+          <button class="action-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+        <div class="user-row" style="opacity:0.55">
+          <div class="user-avatar" style="background:var(--gray-mid)">TW</div>
+          <div>
+            <div class="user-name">Tom Walsh</div>
+            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7d389d0c6cbd4cfe7c6c4c4d5c2c3c889c4c8ca">[email&#160;protected]</a></div>
+          </div>
+          <span class="user-role-badge role-standard">Standard</span>
+          <div class="user-spacer"></div>
+          <span style="font-size:11px;color:var(--pink)">Never logged in — email fallback active</span>
+          <button class="action-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+        <div style="margin-top:16px;padding:12px 14px;background:var(--lavender);border-radius:var(--radius);border:1px solid var(--gray-light);font-size:11.5px;color:var(--navy-light)">
+          <strong style="color:var(--navy)">Email Fallback Active:</strong> Users who have not logged into the portal receive automated error reports via email. Configure distribution lists in your partner settings or contact the Beghou data operations team.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- CORRECTION / EDIT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="main-modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">Edit Exception Record</div>
+        <div class="modal-subtitle" id="modal-subtitle">Submit a correction or override for this field-level error</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="phi-warning" id="phi-warning" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span><strong>PHI Field Detected.</strong> The field in error contains patient identifier data. The actual field value is not displayed. Resolve via corrected file resubmission or use override/manual close below.</span>
+      </div>
+
+      <div class="form-section-title">Record Details</div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label">Vendor Name</label>
+          <div class="form-value" id="modal-vendor">—</div>
+        </div>
+        <div>
+          <label class="form-label">File Name</label>
+          <div class="form-value" id="modal-file">—</div>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label">Transaction ID</label>
+          <div class="form-value" id="modal-txn">—</div>
+        </div>
+        <div>
+          <label class="form-label">Internal Record ID</label>
+          <div class="form-value" id="modal-recid">—</div>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label">Patient ID</label>
+          <div class="form-value" id="modal-patient">—</div>
+        </div>
+        <div>
+          <label class="form-label">Error First Received</label>
+          <div class="form-value" id="modal-date">—</div>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div>
+          <label class="form-label">Field in Error</label>
+          <div class="form-value" id="modal-field">—</div>
+        </div>
+        <div>
+          <label class="form-label">Error Reason</label>
+          <div class="form-value" id="modal-reason">—</div>
+        </div>
+      </div>
+
+      <div class="form-section-title">Field Value</div>
+      <div class="value-compare-box" id="value-compare-box">
+        <div class="vc-label" id="vc-state-label">Original (erroneous) value</div>
+        <div class="value-compare-row" id="value-compare-row">
+          <!-- populated by openModal() -->
+        </div>
+        <div class="vc-updated-by" id="vc-updated-by" style="display:none"></div>
+      </div>
+
+      <div class="form-section-title">Correction</div>
+      <div class="form-row">
+        <label class="form-label">Status</label>
+        <select class="filter-select form-input" id="modal-status-select" style="width:200px">
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+      </div>
+      <div class="form-row" id="corrected-value-row">
+        <label class="form-label">Corrected Value</label>
+        <input type="text" class="form-input" id="modal-corrected" placeholder="Enter the corrected field value">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Notes / Comments</label>
+        <textarea class="form-input" id="modal-notes" placeholder="Document the reason for this correction, restate record date, or other context…"></textarea>
+      </div>
+
+      <div class="override-section">
+        <label class="override-toggle">
+          <input type="checkbox" id="override-check" onchange="toggleOverride()">
+          Override / Manual Close (close without corrected value)
+        </label>
+        <div class="override-details" id="override-details">
+          <div style="margin-top:8px;font-size:11.5px;color:var(--navy-light);line-height:1.5">
+            Use this when a required field is <strong>permanently unavailable</strong> (e.g., ship-from ZIP code the SP cannot provide), or when you intend to restate the full record via your normal file feed.
+          </div>
+          <div class="form-row" style="margin-top:10px;margin-bottom:0">
+            <label class="form-label">Override Reason (required)</label>
+            <textarea class="form-input" id="override-notes" placeholder="Explain why this field cannot be corrected…" style="min-height:60px"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCorrection()">Submit Correction</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEV NOTES -->
+<button class="dev-notes-btn" onclick="toggleDevNotes()" title="Dev Notes">{ }</button>
+<div class="dev-notes-panel" id="dev-notes">
+  <div class="note-section">
+    <h4>ExceptionsTable</h4>
+    <div class="component-tag">ExceptionsTable</div>
+    <ul>
+      <li>One row per field-level error. A single record with multiple column errors = multiple rows.</li>
+      <li>"Days Since" is a calculated display field, not a filter.</li>
+      <li>RBAC: vendor sees only their own records. Enforce at API layer.</li>
+      <li>PHI fields (DOB, patient name) display INVALID flag — no raw value.</li>
+    </ul>
+  </div>
+  <div class="note-section">
+    <h4>CorrectionModal</h4>
+    <div class="component-tag">CorrectionModal</div>
+    <ul>
+      <li>Correction saved as separate data input — not overwriting raw source.</li>
+      <li>Corrections bypass raw-to-stage validation.</li>
+      <li>Batched and ingested at EOD or next scheduled run.</li>
+      <li>Override requires non-empty notes. Flag retained in audit log.</li>
+      <li>Records missing TxnID or InternalRecordID → manual intervention only, no portal resolution.</li>
+    </ul>
+  </div>
+  <div class="note-section">
+    <h4>PartialResolution</h4>
+    <div class="component-tag">PartialResolution</div>
+    <ul>
+      <li>Vendor may resolve individual column-level errors independently.</li>
+      <li>Parent record stays Open until ALL column errors resolved/overridden.</li>
+    </ul>
+  </div>
+  <div class="note-section">
+    <h4>OperationalAlerts</h4>
+    <div class="component-tag">OperationalAlertsTab</div>
+    <ul>
+      <li>Alert types TBD — pending stakeholder alignment.</li>
+      <li>3 alert types identified: inventory mismatch, unlinked triage, field density.</li>
+    </ul>
+  </div>
+  <div class="note-section">
+    <h4>EmailFallback</h4>
+    <div class="component-tag">EmailFallback</div>
+    <ul>
+      <li>File summary report: triggered on each file ingestion completion.</li>
+      <li>Aging report: weekly, open errors 10+ days.</li>
+      <li>Any record-level email requires security lead approval before deployment.</li>
+      <li>SMTP must be secure/approved config.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const DATA = [
+  { vendor:'SP 1', file:'ProductA_PatientStatus_Onco360_RESTA...', txn:'TXN-00241', recid:'REC-8810021', patient:'2416397', field:'Patient_Date_of_Birth', reason:'Required field is blank', date:'3/24/2021', days:1838, status:'Resolved', override:false, phi:true, notes:'Corrected DOB submitted 4/23/2025', originalValue:'', correctedValue:'', correctedBy:'jane.doe@accredo.com', correctedDate:'4/23/2025' },
+  { vendor:'SP 1', file:'ProductA_PatientStatus_Onco360_RESTA...', txn:'TXN-00242', recid:'REC-8810022', patient:'2416347', field:'Rx_Written_Refills', reason:'Refills must be between 0 and 10', date:'3/24/2021', days:1838, status:'Resolved', override:false, phi:false, notes:'Checked with reimbursement mgr', originalValue:'-1', correctedValue:'5', correctedBy:'jane.doe@accredo.com', correctedDate:'8/1/2023' },
+  { vendor:'SP 1', file:'ProductA_PatientStatus_Onco360_RESTA...', txn:'TXN-00243', recid:'REC-8810023', patient:'3242237', field:'HCP_State', reason:'State not recognized', date:'3/24/2021', days:1838, status:'Open', override:false, phi:false, notes:'', originalValue:'ZZ', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'SP 2', file:'SP2_20210206.txt', txn:'TXN-00512', recid:'REC-9920041', patient:'9245337', field:'Rx_Fill_Number', reason:'Rx_Fill_Number cannot be blank', date:'2/12/2021', days:1879, status:'Open', override:false, phi:false, notes:'', originalValue:'', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'SP 1', file:'ProductA_Dispense_Onco360_20210205...', txn:'TXN-00301', recid:'REC-7710031', patient:'547720547', field:'SP_Ship_From_ZIP_Code', reason:'ZIP code does not have five digits', date:'2/5/2021', days:1886, status:'In Progress', override:false, phi:false, notes:'Investigating with logistics', originalValue:'1420', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'SP 1', file:'ProductA_Dispense_Onco360_20210205...', txn:'TXN-00302', recid:'REC-7710032', patient:'641850641', field:'SP_Ship_From_ZIP_Code', reason:'ZIP code does not have five digits', date:'2/5/2021', days:1886, status:'Open', override:false, phi:false, notes:'', originalValue:'14208', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'Hub 1', file:'SP1_20210204.txt', txn:'TXN-00801', recid:'REC-1120041', patient:'1244211', field:'HCP_Last_Name', reason:'Required field is blank', date:'2/4/2021', days:1887, status:'Open', override:false, phi:true, notes:'', originalValue:'', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'Hub 1', file:'SP1_20210205.txt', txn:'TXN-00802', recid:'REC-1120042', patient:'5146937', field:'Quantity_Shipped', reason:'Quantity Shipped must be <= 20', date:'2/4/2021', days:1887, status:'Open', override:false, phi:false, notes:'', originalValue:'21', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'Hub 1', file:'SP1_20210206.txt', txn:'TXN-00803', recid:'REC-1120043', patient:'2556322', field:'status_code', reason:'Invalid status code', date:'2/4/2021', days:1887, status:'Open', override:false, phi:false, notes:'', originalValue:'R90', correctedValue:'', correctedBy:'', correctedDate:'' },
+];
+
+let currentRow = null;
+
+function daysBadge(d) {
+  if (d < 10) return `<span class="days-badge days-ok">${d}d</span>`;
+  if (d < 30) return `<span class="days-badge days-warn">${d}d</span>`;
+  return `<span class="days-badge days-danger">${d}d</span>`;
+}
+function statusBadge(s, override) {
+  if (override) return `<span class="status-badge status-override"><span class="status-dot"></span>Overridden</span>`;
+  if (s === 'Open') return `<span class="status-badge status-open"><span class="status-dot"></span>Open</span>`;
+  if (s === 'In Progress') return `<span class="status-badge status-progress"><span class="status-dot"></span>In Progress</span>`;
+  return `<span class="status-badge status-resolved"><span class="status-dot"></span>Resolved</span>`;
+}
+function originalValueCell(r) {
+  if (r.phi) return `<span class="phi-flag">PHI — masked</span>`;
+  if (!r.originalValue) return `<span class="val-blank">(blank)</span>`;
+  return `<span class="val-original">${r.originalValue}</span>`;
+}
+function correctedValueCell(r) {
+  if (!r.correctedValue) return '<span style="color:var(--gray-mid);font-size:11px">—</span>';
+  return `<span class="val-corrected">${r.correctedValue}</span>`;
+}
+
+function renderTable(rows) {
+  const tbody = document.getElementById('exceptions-tbody');
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr onclick="openModal(${DATA.indexOf(r)})">
+      <td class="td-vendor">${r.vendor}</td>
+      <td class="td-file" title="${r.file}">${r.file}</td>
+      <td class="td-txn">${r.txn}</td>
+      <td class="td-txn">${r.recid}</td>
+      <td class="td-txn">${r.phi ? `<span class="phi-flag">████████</span>` : r.patient}</td>
+      <td><span class="td-field">${r.field}</span>${r.phi ? ' <span style="font-size:9px;color:var(--pink);font-weight:700">PHI</span>' : ''}</td>
+      <td class="td-error">${r.reason}</td>
+      <td>${r.date}</td>
+      <td>${daysBadge(r.days)}</td>
+      <td>${originalValueCell(r)}</td>
+      <td>${correctedValueCell(r)}</td>
+      <td>${statusBadge(r.status, r.override)}</td>
+      <td>${r.override ? '<span style="color:var(--purple-dark);font-size:11px;font-weight:600">✓ Override</span>' : '—'}</td>
+      <td onclick="event.stopPropagation()">
+        <button class="action-btn" onclick="openModal(${DATA.indexOf(r)})" title="Edit / Resolve">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+  document.getElementById('results-count').textContent = rows.length;
+}
+
+function updateCards() {
+  document.getElementById('card-all').textContent       = DATA.length;
+  document.getElementById('card-open').textContent      = DATA.filter(r => r.status === 'Open' && !r.override).length;
+  document.getElementById('card-progress').textContent  = DATA.filter(r => r.status === 'In Progress').length;
+  document.getElementById('card-resolved').textContent  = DATA.filter(r => r.status === 'Resolved' && !r.override).length;
+  document.getElementById('card-overridden').textContent = DATA.filter(r => r.override).length;
+}
+
+function applyFilters() {
+  const sf = document.getElementById('status-filter').value;
+  const filtered = DATA.filter(r => !sf || r.status === sf);
+  renderTable(filtered);
+}
+
+function openModal(idx) {
+  currentRow = idx;
+  const r = DATA[idx];
+  document.getElementById('modal-title').textContent = `Edit Exception — ${r.field}`;
+  document.getElementById('modal-subtitle').textContent = `${r.vendor} · ${r.file}`;
+  document.getElementById('modal-vendor').textContent = r.vendor;
+  document.getElementById('modal-file').textContent = r.file;
+  document.getElementById('modal-txn').textContent = r.txn;
+  document.getElementById('modal-recid').textContent = r.recid;
+  document.getElementById('modal-patient').textContent = r.phi ? '████████ (PHI — masked)' : r.patient;
+  document.getElementById('modal-date').textContent = r.date;
+  document.getElementById('modal-field').textContent = r.field;
+  document.getElementById('modal-reason').textContent = r.reason;
+  document.getElementById('modal-status-select').value = r.status;
+  document.getElementById('modal-corrected').value = r.correctedValue || '';
+  document.getElementById('modal-notes').value = r.notes || '';
+  document.getElementById('override-check').checked = r.override;
+  document.getElementById('override-details').classList.toggle('visible', r.override);
+  document.getElementById('phi-warning').style.display = r.phi ? 'flex' : 'none';
+  document.getElementById('corrected-value-row').style.display = r.phi ? 'none' : 'block';
+
+  // Value comparison box
+  const compareRow = document.getElementById('value-compare-row');
+  const stateLabel = document.getElementById('vc-state-label');
+  const updatedBy = document.getElementById('vc-updated-by');
+  if (r.phi) {
+    stateLabel.textContent = 'PHI field — value not displayed';
+    compareRow.innerHTML = `<span class="vc-blank">████████ (masked)</span>`;
+    updatedBy.style.display = 'none';
+  } else if (r.correctedValue) {
+    stateLabel.textContent = 'Value updated — before & after';
+    const origHtml = r.originalValue
+      ? `<span class="vc-original">${r.originalValue}</span>`
+      : `<span class="vc-blank">(blank)</span>`;
+    compareRow.innerHTML = `${origHtml}<span class="vc-arrow">→</span><span class="vc-corrected">${r.correctedValue}</span>`;
+    updatedBy.style.display = 'block';
+    updatedBy.innerHTML = `Updated by <strong>${r.correctedBy}</strong> on <strong>${r.correctedDate}</strong>`;
+  } else {
+    stateLabel.textContent = 'Original (erroneous) value';
+    const origHtml = r.originalValue
+      ? `<span class="vc-original">${r.originalValue}</span>`
+      : `<span class="vc-blank">(blank — required field)</span>`;
+    compareRow.innerHTML = origHtml;
+    updatedBy.style.display = 'none';
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+function toggleOverride() {
+  const chk = document.getElementById('override-check').checked;
+  document.getElementById('override-details').classList.toggle('visible', chk);
+}
+function submitCorrection() {
+  const r = DATA[currentRow];
+  const override = document.getElementById('override-check').checked;
+  const notes = document.getElementById('modal-notes').value;
+  const overrideNotes = document.getElementById('override-notes').value;
+  const correctedVal = document.getElementById('modal-corrected').value.trim();
+  if (override && !overrideNotes.trim()) { showToast('Override reason is required', 'error'); return; }
+  r.status = document.getElementById('modal-status-select').value;
+  r.override = override;
+  r.notes = override ? overrideNotes : notes;
+  if (!r.phi && correctedVal) {
+    r.correctedValue = correctedVal;
+    r.correctedBy = 'jane.doe@accredo.com';
+    r.correctedDate = new Date().toLocaleDateString('en-US');
+  }
+  closeModal();
+  renderTable(DATA);
+  updateCards();
+  showToast(override ? 'Override submitted — record flagged for Beghou review' : 'Correction submitted — will be processed at end of business day', 'success');
+}
+
+function switchTab(el, filter) {
+  document.querySelectorAll('#page-exceptions .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (filter === 'all') renderTable(DATA);
+  else if (filter === 'open') renderTable(DATA.filter(r => r.status === 'Open'));
+  else if (filter === 'progress') renderTable(DATA.filter(r => r.status === 'In Progress'));
+  else if (filter === 'resolved') renderTable(DATA.filter(r => r.status === 'Resolved'));
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleDevNotes() {
+  document.getElementById('dev-notes').classList.toggle('open');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function sortTable(col) { /* stub — visual only */ }
+
+// Init
+renderTable(DATA);
+updateCards();
+</script>
+</body>
+</html>
