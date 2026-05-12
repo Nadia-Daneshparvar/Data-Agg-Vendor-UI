@@ -185,7 +185,7 @@
   .content-area { flex: 1; padding: 16px 24px; overflow-y: auto; }
 
   /* SUMMARY CARDS */
-  .summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
   .summary-card.navy { border-left-color: var(--navy); }
   .summary-card {
     background: white;
@@ -524,7 +524,7 @@
     <a class="nav-item active" onclick="showPage('exceptions')">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       Data Exceptions
-      <span class="nav-badge">9</span>
+      <span class="nav-badge">12</span>
     </a>
     <a class="nav-item" onclick="showPage('alerts')">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -538,7 +538,7 @@
     <div class="sidebar-spacer"></div>
     <div class="sidebar-footer">
       <div class="sidebar-footer-label">Logged in as</div>
-      <div class="sidebar-footer-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7305161d171c01331210100116171c5d101c1e">[email&#160;protected]</a></div>
+      <div class="sidebar-footer-val">vendor@accredo.com</div>
       <div class="sidebar-footer-label" style="margin-top:8px">Role</div>
       <div class="sidebar-footer-val">Manager</div>
     </div>
@@ -565,7 +565,7 @@
           <div class="tab active" onclick="switchTab(this, 'all')">All Exceptions</div>
           <div class="tab" onclick="switchTab(this, 'open')">Open <span style="color:var(--pink);margin-left:4px;font-weight:700">6</span></div>
           <div class="tab" onclick="switchTab(this, 'progress')">In Progress <span style="color:#7D5A0E;margin-left:4px;font-weight:700">1</span></div>
-          <div class="tab" onclick="switchTab(this, 'resolved')">Resolved <span style="color:#1D6A3A;margin-left:4px;font-weight:700">2</span></div>
+          <div class="tab" onclick="switchTab(this, 'resolved')">Resolved <span style="color:#1D6A3A;margin-left:4px;font-weight:700">5</span></div>
         </div>
       </div>
 
@@ -601,7 +601,7 @@
           <input type="date" value="2026-04-06">
         </div>
         <div class="filter-spacer"></div>
-        <span class="results-count"><strong id="results-count">9</strong> records</span>
+        <span class="results-count"><strong id="results-count">12</strong> records</span>
       </div>
 
       <!-- SUMMARY CARDS -->
@@ -609,7 +609,7 @@
         <div class="summary-row">
           <div class="summary-card navy">
             <div class="summary-label">All Errors</div>
-            <div class="summary-value" style="color:var(--navy)" id="card-all">9</div>
+            <div class="summary-value" style="color:var(--navy)" id="card-all">12</div>
             <div class="summary-sub">Across all statuses</div>
           </div>
           <div class="summary-card">
@@ -624,13 +624,8 @@
           </div>
           <div class="summary-card green">
             <div class="summary-label">Resolved</div>
-            <div class="summary-value" style="color:#1D6A3A" id="card-resolved">2</div>
-            <div class="summary-sub"><span class="ok">+2</span> this week</div>
-          </div>
-          <div class="summary-card pink">
-            <div class="summary-label">Overridden</div>
-            <div class="summary-value" style="color:#4527A0" id="card-overridden">0</div>
-            <div class="summary-sub">Manual closes pending review</div>
+            <div class="summary-value" style="color:#1D6A3A" id="card-resolved">5</div>
+            <div class="summary-sub"><span id="card-overridden-count">3</span> overridden</div>
           </div>
         </div>
       </div>
@@ -661,7 +656,7 @@
             </tbody>
           </table>
           <div class="pagination">
-            <span>Showing 1–9 of 9 records</span>
+            <span>Showing 1–12 of 12 records</span>
             <div class="page-btns">
               <button class="page-btn">‹</button>
               <button class="page-btn current">1</button>
@@ -752,7 +747,7 @@
           <div class="user-avatar">JD</div>
           <div>
             <div class="user-name">Jane Doe</div>
-            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="107a717e753e747f75507173736275747f3e737f7d">[email&#160;protected]</a></div>
+            <div class="user-email">jane.doe@accredo.com</div>
           </div>
           <span class="user-role-badge role-manager">Manager</span>
           <div class="user-spacer"></div>
@@ -765,7 +760,7 @@
           <div class="user-avatar" style="background:var(--teal-dark)">MK</div>
           <div>
             <div class="user-name">Mike Kim</div>
-            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="79145712101439181a1a0b1c1d16571a1614">[email&#160;protected]</a></div>
+            <div class="user-email">m.kim@accredo.com</div>
           </div>
           <span class="user-role-badge role-standard">Standard</span>
           <div class="user-spacer"></div>
@@ -778,7 +773,7 @@
           <div class="user-avatar" style="background:var(--navy-light)">SR</div>
           <div>
             <div class="user-name">Sara Reyes</div>
-            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ec9fc29e8995899fac8d8f8f9e898883c28f8381">[email&#160;protected]</a></div>
+            <div class="user-email">s.reyes@accredo.com</div>
           </div>
           <span class="user-role-badge role-standard">Standard</span>
           <div class="user-spacer"></div>
@@ -791,7 +786,7 @@
           <div class="user-avatar" style="background:var(--gray-mid)">TW</div>
           <div>
             <div class="user-name">Tom Walsh</div>
-            <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a7d389d0c6cbd4cfe7c6c4c4d5c2c3c889c4c8ca">[email&#160;protected]</a></div>
+            <div class="user-email">t.walsh@accredo.com</div>
           </div>
           <span class="user-role-badge role-standard">Standard</span>
           <div class="user-spacer"></div>
@@ -972,7 +967,7 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const DATA = [
   { vendor:'SP 1', file:'ProductA_PatientStatus_Onco360_RESTA...', txn:'TXN-00241', recid:'REC-8810021', patient:'2416397', field:'Patient_Date_of_Birth', reason:'Required field is blank', date:'3/24/2021', days:1838, status:'Resolved', override:false, phi:true, notes:'Corrected DOB submitted 4/23/2025', originalValue:'', correctedValue:'', correctedBy:'jane.doe@accredo.com', correctedDate:'4/23/2025' },
   { vendor:'SP 1', file:'ProductA_PatientStatus_Onco360_RESTA...', txn:'TXN-00242', recid:'REC-8810022', patient:'2416347', field:'Rx_Written_Refills', reason:'Refills must be between 0 and 10', date:'3/24/2021', days:1838, status:'Resolved', override:false, phi:false, notes:'Checked with reimbursement mgr', originalValue:'-1', correctedValue:'5', correctedBy:'jane.doe@accredo.com', correctedDate:'8/1/2023' },
@@ -983,6 +978,9 @@ const DATA = [
   { vendor:'Hub 1', file:'SP1_20210204.txt', txn:'TXN-00801', recid:'REC-1120041', patient:'1244211', field:'HCP_Last_Name', reason:'Required field is blank', date:'2/4/2021', days:1887, status:'Open', override:false, phi:true, notes:'', originalValue:'', correctedValue:'', correctedBy:'', correctedDate:'' },
   { vendor:'Hub 1', file:'SP1_20210205.txt', txn:'TXN-00802', recid:'REC-1120042', patient:'5146937', field:'Quantity_Shipped', reason:'Quantity Shipped must be <= 20', date:'2/4/2021', days:1887, status:'Open', override:false, phi:false, notes:'', originalValue:'21', correctedValue:'', correctedBy:'', correctedDate:'' },
   { vendor:'Hub 1', file:'SP1_20210206.txt', txn:'TXN-00803', recid:'REC-1120043', patient:'2556322', field:'status_code', reason:'Invalid status code', date:'2/4/2021', days:1887, status:'Open', override:false, phi:false, notes:'', originalValue:'R90', correctedValue:'', correctedBy:'', correctedDate:'' },
+  { vendor:'SP 1', file:'ProductA_Dispense_Onco360_20210128...', txn:'TXN-00277', recid:'REC-7710018', patient:'891240333', field:'SP_Ship_From_ZIP_Code', reason:'ZIP code does not have five digits', date:'1/28/2021', days:1894, status:'Resolved', override:true, phi:false, notes:'SP cannot provide ship-from ZIP for this fulfillment center — field will never be populated for these records. Confirmed with operations lead.', originalValue:'1420', correctedValue:'', correctedBy:'jane.doe@accredo.com', correctedDate:'2/8/2021' },
+  { vendor:'SP 2', file:'SP2_20210130.txt', txn:'TXN-00498', recid:'REC-9920028', patient:'7733412', field:'Rx_Fill_Number', reason:'Rx_Fill_Number cannot be blank', date:'1/30/2021', days:1892, status:'Resolved', override:true, phi:false, notes:'Restating full record via normal file feed on 2/15/2021. Restate record date: 2/15/2021.', originalValue:'', correctedValue:'', correctedBy:'jane.doe@accredo.com', correctedDate:'2/4/2021' },
+  { vendor:'Hub 1', file:'SP1_20210122.txt', txn:'TXN-00765', recid:'REC-1120012', patient:'4488221', field:'HCP_Middle_Initial', reason:'Required when available — field is blank', date:'1/22/2021', days:1900, status:'Resolved', override:true, phi:false, notes:'Optional field for this HCP — not collected at intake. No correction possible.', originalValue:'', correctedValue:'', correctedBy:'m.kim@accredo.com', correctedDate:'1/29/2021' },
 ];
 
 let currentRow = null;
@@ -1039,8 +1037,8 @@ function updateCards() {
   document.getElementById('card-all').textContent       = DATA.length;
   document.getElementById('card-open').textContent      = DATA.filter(r => r.status === 'Open' && !r.override).length;
   document.getElementById('card-progress').textContent  = DATA.filter(r => r.status === 'In Progress').length;
-  document.getElementById('card-resolved').textContent  = DATA.filter(r => r.status === 'Resolved' && !r.override).length;
-  document.getElementById('card-overridden').textContent = DATA.filter(r => r.override).length;
+  document.getElementById('card-resolved').textContent  = DATA.filter(r => r.status === 'Resolved' || r.override).length;
+  document.getElementById('card-overridden-count').textContent = DATA.filter(r => r.override).length;
 }
 
 function applyFilters() {
@@ -1130,7 +1128,7 @@ function switchTab(el, filter) {
   if (filter === 'all') renderTable(DATA);
   else if (filter === 'open') renderTable(DATA.filter(r => r.status === 'Open'));
   else if (filter === 'progress') renderTable(DATA.filter(r => r.status === 'In Progress'));
-  else if (filter === 'resolved') renderTable(DATA.filter(r => r.status === 'Resolved'));
+  else if (filter === 'resolved') renderTable(DATA.filter(r => r.status === 'Resolved' || r.override));
 }
 
 function showPage(name) {
